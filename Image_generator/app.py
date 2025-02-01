@@ -4,7 +4,7 @@ import requests
 
 app = Flask(__name__)
 
-ACCESS_KEY = "Tks2HeM3odm5pmjYnb_IDpNwXZtpN07nheWDpJoWt8M"
+ACCESS_KEY = "your-api-key"
 
 @app.route('/')
 def home():
