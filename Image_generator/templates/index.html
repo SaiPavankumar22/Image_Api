@@ -1,0 +1,59 @@
+# templates/index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unsplash Image Search</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+        .container { margin-top: 50px; }
+        .image-result { margin-top: 20px; }
+        img { max-width: 100%; height: auto; }
+        .copy-btn { margin-top: 10px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="text-center">Unsplash Image Search</h1>
+    <form id="search-form">
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="Enter keyword..." name="keyword" required>
+            <button class="btn btn-primary" type="submit">Search</button>
+        </div>
+    </form>
+    <div id="image-container" class="image-result text-center">
+        <!-- Image and link will be displayed here -->
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $('#search-form').on('submit', function(event) {
+        event.preventDefault();
+        $.ajax({
+            url: '/search',
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function(data) {
+                if (data.error) {
+                    $('#image-container').html(`<div class="alert alert-danger">${data.error}</div>`);
+                } else {
+                    $('#image-container').html(`
+                        <img src="${data.image_url}" class="img-fluid rounded">
+                        <input type="text" class="form-control copy-link" value="${data.image_link}" readonly>
+                        <button class="btn btn-secondary copy-btn">Copy Link</button>
+                    `);
+                    $('.copy-btn').on('click', function() {
+                        $('.copy-link').select();
+                        document.execCommand('copy');
+                        alert('Link copied!');
+                    });
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>
